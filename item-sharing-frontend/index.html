@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>物品借用交换平台</title>
+  <!-- 引入CSS样式 -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- 字体图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="logo">
+      <h1>物品借用交换平台</h1>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="搜索物品...">
+      <button id="search-btn"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-item active" data-page="home">主页</a>
+      <a href="#" class="nav-item" data-page="profile">个人中心</a>
+      <div class="auth-buttons">
+        <button id="login-btn">登录</button>
+        <button id="register-btn">注册</button>
+      </div>
+      <div class="user-info hidden">
+        <span id="user-nickname"></span>
+        <div class="avatar-container">
+          <img src="" alt="用户头像" id="user-avatar">
+          <span class="notification-badge hidden" id="notification-badge">0</span>
+        </div>
+        <button id="logout-btn">退出</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主要内容容器 -->
+  <main id="main-content">
+    <!-- 首页内容 -->
+    <section id="home-page" class="page active">
+      <div class="filter-container">
+        <div class="filter-section">
+          <label for="region-filter">地区</label>
+          <select id="region-filter">
+            <option value="">所有地区</option>
+            <option value="1">地区1</option>
+            <option value="2">地区2</option>
+            <option value="3">地区3</option>
+            <option value="4">地区4</option>
+            <option value="5">地区5</option>
+            <option value="6">地区6</option>
+            <option value="7">地区7</option>
+            <option value="8">地区8</option>
+            <option value="9">地区9</option>
+            <option value="10">地区10</option>
+          </select>
+        </div>
+        <div class="filter-section">
+          <label for="category-filter">类别</label>
+          <select id="category-filter">
+            <option value="">所有类别</option>
+            <option value="1">类别1</option>
+            <option value="2">类别2</option>
+            <option value="3">类别3</option>
+            <option value="4">类别4</option>
+            <option value="5">类别5</option>
+          </select>
+        </div>
+        <button id="filter-btn">筛选</button>
+      </div>
+
+      <div class="add-item-button">
+        <button id="add-item-btn">发布物品</button>
+      </div>
+
+      <div class="items-container" id="items-container">
+        <!-- 物品列表，由JS动态生成 -->
+      </div>
+    </section>
+
+    <!-- 个人中心页面 -->
+    <section id="profile-page" class="page">
+      <div class="profile-container">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            <img src="" alt="头像" id="profile-avatar-img">
+            <div class="avatar-edit hidden" id="avatar-edit">
+              <label for="avatar-upload"><i class="fas fa-camera"></i></label>
+              <input type="file" id="avatar-upload" accept="image/*">
+            </div>
+          </div>
+          <div class="profile-info">
+            <h2 id="profile-nickname"></h2>
+            <p id="profile-username"></p>
+            <p id="profile-bio"></p>
+            <button id="edit-profile-btn" class="hidden">编辑资料</button>
+            <button id="chat-with-user-btn" class="hidden">发送消息</button>
+          </div>
+        </div>
+
+        <div class="profile-tabs">
+          <button class="tab-btn active" data-tab="my-items">我的物品</button>
+          <button class="tab-btn" data-tab="borrowed-items">已借物品</button>
+          <button class="tab-btn" data-tab="messages">消息</button>
+        </div>
+
+        <div class="profile-content">
+          <div class="tab-content active" id="my-items-content">
+            <div class="items-container" id="user-items-container"></div>
+          </div>
+          <div class="tab-content" id="borrowed-items-content">
+            <div class="items-container" id="borrowed-items-container"></div>
+          </div>
+          <div class="tab-content" id="messages-content">
+            <div class="message-list" id="message-list"></div>
+            <div class="chat-container hidden" id="chat-container">
+              <div class="chat-header">
+                <button id="back-to-messages-btn"><i class="fas fa-arrow-left"></i></button>
+                <h3 id="chat-user-name"></h3>
+              </div>
+              <div class="chat-messages" id="chat-messages"></div>
+              <div class="chat-input">
+                <input type="text" id="chat-message-input" placeholder="输入消息...">
+                <button id="send-message-btn">发送</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 物品详情模态框 -->
+  <div class="modal" id="item-detail-modal">
+    <div class="modal-content">
+      <span class="close-btn" id="close-item-detail">&times;</span>
+      <div class="item-detail-container" id="item-detail-container"></div>
+    </div>
+  </div>
+
+  <!-- 登录模态框 -->
+  <div class="modal" id="login-modal">
+    <div class="modal-content auth-modal">
+      <span class="close-btn" id="close-login">&times;</span>
+      <h2>登录</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username">账号</label>
+          <input type="text" id="login-username" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">密码</label>
+          <input type="password" id="login-password" required>
+        </div>
+        <div class="form-message" id="login-message"></div>
+        <button type="submit">登录</button>
+        <p class="form-switch">没有账号？<a href="#" id="switch-to-register">立即注册</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- 注册模态框 -->
+  <div class="modal" id="register-modal">
+    <div class="modal-content auth-modal">
+      <span class="close-btn" id="close-register">&times;</span>
+      <h2>注册</h2>
+      <form id="register-form">
+        <div class="form-group">
+          <label for="register-nickname">昵称</label>
+          <input type="text" id="register-nickname" required>
+        </div>
+        <div class="form-group">
+          <label for="register-username">账号</label>
+          <input type="text" id="register-username" required>
+        </div>
+        <div class="form-group">
+          <label for="register-password">密码</label>
+          <input type="password" id="register-password" required>
+        </div>
+        <div class="form-group">
+          <label for="register-confirm-password">确认密码</label>
+          <input type="password" id="register-confirm-password" required>
+        </div>
+        <div class="form-message" id="register-message"></div>
+        <button type="submit">注册</button>
+        <p class="form-switch">已有账号？<a href="#" id="switch-to-login">立即登录</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加物品模态框 -->
+  <div class="modal" id="add-item-modal">
+    <div class="modal-content">
+      <span class="close-btn" id="close-add-item">&times;</span>
+      <h2>发布物品</h2>
+      <form id="add-item-form">
+        <div class="form-group">
+          <label for="item-title">标题</label>
+          <input type="text" id="item-title" required>
+        </div>
+        <div class="form-group">
+          <label for="item-description">描述</label>
+          <textarea id="item-description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="item-region">地区</label>
+          <select id="item-region" required>
+            <option value="">选择地区</option>
+            <option value="1">地区1</option>
+            <option value="2">地区2</option>
+            <option value="3">地区3</option>
+            <option value="4">地区4</option>
+            <option value="5">地区5</option>
+            <option value="6">地区6</option>
+            <option value="7">地区7</option>
+            <option value="8">地区8</option>
+            <option value="9">地区9</option>
+            <option value="10">地区10</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="item-category">类别</label>
+          <select id="item-category" required>
+            <option value="">选择类别</option>
+            <option value="1">类别1</option>
+            <option value="2">类别2</option>
+            <option value="3">类别3</option>
+            <option value="4">类别4</option>
+            <option value="5">类别5</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="item-images">上传图片</label>
+          <input type="file" id="item-images" accept="image/*" multiple required>
+          <div class="image-preview" id="image-preview"></div>
+        </div>
+        <div class="form-message" id="add-item-message"></div>
+        <button type="submit">发布</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 编辑个人资料模态框 -->
+  <div class="modal" id="edit-profile-modal">
+    <div class="modal-content">
+      <span class="close-btn" id="close-edit-profile">&times;</span>
+      <h2>编辑个人资料</h2>
+      <form id="edit-profile-form">
+        <div class="form-group">
+          <label for="edit-nickname">昵称</label>
+          <input type="text" id="edit-nickname" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-bio">个人简介</label>
+          <textarea id="edit-bio"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="edit-password">新密码（可选）</label>
+          <input type="password" id="edit-password">
+        </div>
+        <div class="form-message" id="edit-profile-message"></div>
+        <button type="submit">保存</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript文件 -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/items.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/messages.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html> 
