@@ -3,13 +3,13 @@
  */
 
 // API基础URL，根据实际部署情况修改
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://192.168.194.33:5000/api';
 
 // 上传文件URL
-const UPLOADS_URL = 'http://localhost:5000/uploads';
+const UPLOADS_URL = 'http://192.168.194.33:5000/uploads';
 
 // 默认头像
-const DEFAULT_AVATAR = 'http://localhost:5000/default-avatar.png';
+const DEFAULT_AVATAR = 'http://192.168.194.33:5000/default-avatar.png';
 
 // 存储Token的localStorage键名
 const TOKEN_KEY = 'itemSharingToken';
